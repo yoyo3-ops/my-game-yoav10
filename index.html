@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>משחק לחיצות קקי אולטימטיבי</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #fff;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f1c40f;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #poop-btn {
+            background: none;
+            border: none;
+            font-size: 10rem;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            outline: none;
+            filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.4));
+        }
+
+        #poop-btn:active {
+            transform: scale(0.85);
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>משחק לחיצות קקי 💩</h1>
+    <div id="score">0</div>
+    
+    <button id="poop-btn">💩</button>
+
+    <div id="status">לחץ על מקש **ש** (או **S**) והזן את הקוד להפעלת האוטו-קליקר!</div>
+
+    <script>
+        let score = 0n; // שימוש ב-BigInt להתחלה
+        let autoClickerActive = false;
+        let autoClickerInterval = null;
+
+        const scoreDisplay = document.getElementById('score');
+        const poopBtn = document.getElementById('poop-btn');
+        const statusDisplay = document.getElementById('status');
+
+        // פונקציית עדכון הניקוד
+        function addScore(amount = 1n) {
+            score += BigInt(amount);
+            scoreDisplay.textContent = score.toLocaleString();
+        }
+
+        // לחיצה רגילה על הכפתור
+        poopBtn.addEventListener('click', () => {
+            addScore(1n);
+        });
+
+        // האזנה למקשים במקלדת
+        window.addEventListener('keydown', (event) => {
+            // בדיקה אם לחצו על 'ש' או 's' / 'S'
+            if (event.key.toLowerCase() === 'ש' || event.key.toLowerCase() === 's') {
+                if (!autoClickerActive) {
+                    // בקשת קוד מהמשתמש
+                    let userInput = prompt("הכנס את הקוד הסודי להפעלת האוטו-קליקר:");
+                    
+                    if (userInput === "יואב") {
+                        autoClickerActive = true;
+                        statusDisplay.textContent = "🔥 אוטו-קליקר מטורף הופעל בהצלחה! 🔥";
+                        statusDisplay.style.color = "#e74c3c";
+                        
+                        // הפעלת לחיצות מטורפות (10000000000000000000000000 בשנייה)
+                        autoClickerInterval = setInterval(() => {
+                            addScore(10000000000000000000000000n);
+                        }, 10);
+                    } else if (userInput !== null) {
+                        alert("קוד שגוי! האוטו-קליקר לא הופעל.");
+                    }
+                } else {
+                    // כיבוי האוטו קליקר בלחיצה נוספת על המקש
+                    autoClickerActive = false;
+                    clearInterval(autoClickerInterval);
+                    statusDisplay.textContent = "אוטו-קליקר הופסק. לחץ שוב על 'ש' להפעלה מחדש.";
+                    statusDisplay.style.color = "#fff";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
